@@ -292,6 +292,9 @@ class ProcessAnomaly(interfaces.plugins.PluginInterface, timeliner.TimeLinerInte
             vollog.info("Python Yara file not found, please start malware_yara_rules.py to download file first.")
             raise
         
+        with open('filenames_nist.txt') as f:
+                    filenames = f.read().splitlines()
+        
         for proc in self.list_processes(self.context,
                                         self.config['primary'],
                                         self.config['nt_symbols'],
@@ -453,8 +456,9 @@ class ProcessAnomaly(interfaces.plugins.PluginInterface, timeliner.TimeLinerInte
                         
             #fuzzy similiarity
             if (fuzzy == 1):
-                fuzzy_value = 0
-                for name in ["System", "Registry", "services.exe", "svchost.exe", "lsass.exe", "wlms.exe", "smss.exe", "csrss.exe", "winlogon.exe", "wininit.exe","dwm.exe","conhost.exe"]:                    
+                fuzzy_value = 0                
+                #for name in ["System", "Registry", "services.exe", "svchost.exe", "lsass.exe", "wlms.exe", "smss.exe", "csrss.exe", "winlogon.exe", "wininit.exe","dwm.exe","conhost.exe"]:
+                for name in filenames:
                     fuzzy_temp = fuzz.ratio(proc_name, name)
                     if (fuzzy_value < fuzzy_temp):
                         fuzzy_value = fuzzy_temp           
